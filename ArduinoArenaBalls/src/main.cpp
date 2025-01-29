@@ -283,15 +283,15 @@ void TestMode()
   digitalWrite(start_led, unity_isStartLedOn);
 }
 
+static unsigned long startGameTimestamp = 0;
+static int startGameStep = 0;
+
 void StartGame()
 {
-  static unsigned long startGameTimestamp = 0;
-  static int startGameStep = 0;
-
   if (last_mode != current_mode)
   {
     last_mode = current_mode;
-    enqueueLcdPrint("Test Mode", " ");
+    enqueueLcdPrint("Game Mode", " ");
     counting = false;
     game_on = false;
     digitalWrite(start_led, LOW);
@@ -308,28 +308,6 @@ void StartGame()
   if (unity_resetCounters)
   {
     ResetCounters();
-  }
-
-  if (startGameStep == 1 && millis() - startGameTimestamp >= linac_open_time)
-  {
-    digitalWrite(linac_a, LOW);
-    digitalWrite(linac_b, LOW);
-    startGameTimestamp = millis();
-    startGameStep = 2;
-  }
-
-  if (startGameStep == 2 && millis() - startGameTimestamp >= linac_open_time + 2000)
-  {
-    digitalWrite(blower_0, HIGH);
-    digitalWrite(blower_1, HIGH);
-    digitalWrite(start_led, HIGH);
-
-    display_0.setBrightness(7, true);
-    display_1.setBrightness(7, true);
-
-    counting = true;
-    game_on = true;
-    startGameStep = 3;
   }
 }
 
@@ -351,25 +329,16 @@ void EndGame()
 
     if (counter_0 > counter_1)
     {
-      enqueueLcdPrint("Player 1 Wins", 1);
+      enqueueLcdPrint("Team 1 Wins", 1);
     }
     else if (counter_1 > counter_0)
     {
-      enqueueLcdPrint("Player 2 Wins", 1);
+      enqueueLcdPrint("Team 2 Wins", 1);
     }
     else
     {
       enqueueLcdPrint("Draw", 1);
     }
-  }
-
-  unsigned long now = millis();
-  if (now - blinkLastTime >= 500)
-  {
-    blinkLastTime = now;
-    blinkState = !blinkState;
-    display_0.setBrightness(7, blinkState);
-    display_1.setBrightness(7, blinkState);
   }
 }
 
@@ -424,6 +393,45 @@ void ParseSerialData()
   UseDataLogic();
 }
 
+void GameUpdate()
+{
+  if (current_mode == 2)
+  {
+    if (startGameStep == 1 && millis() - startGameTimestamp >= linac_open_time)
+    {
+      digitalWrite(linac_a, LOW);
+      digitalWrite(linac_b, LOW);
+      startGameTimestamp = millis();
+      startGameStep = 2;
+    }
+
+    if (startGameStep == 2 && millis() - startGameTimestamp >= linac_open_time + 2000)
+    {
+      digitalWrite(blower_0, HIGH);
+      digitalWrite(blower_1, HIGH);
+      digitalWrite(start_led, HIGH);
+
+      display_0.setBrightness(7, true);
+      display_1.setBrightness(7, true);
+
+      counting = true;
+      game_on = true;
+      startGameStep = 3;
+    }
+  }
+  else if (current_mode == 3)
+  {
+    unsigned long now = millis();
+    if (now - blinkLastTime >= 500)
+    {
+      blinkLastTime = now;
+      blinkState = !blinkState;
+      display_0.setBrightness(7, blinkState);
+      display_1.setBrightness(7, blinkState);
+    }
+  }
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -469,6 +477,8 @@ void loop()
     inString = "";
     stringComplete = false;
   }
+
+  GameUpdate();
 
   start_button = !digitalRead(start_switch);
 

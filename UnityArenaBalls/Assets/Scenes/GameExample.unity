@@ -1164,7 +1164,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -100.57}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1061420883
@@ -1594,7 +1594,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1458709080}
-  - component: {fileID: 1458709079}
   - component: {fileID: 1458709081}
   m_Layer: 0
   m_Name: GameCanvas
@@ -1603,34 +1602,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1458709079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1458709078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 303c212a68a29b14db70428eb5c82037, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arenaBallsController: {fileID: 375149854}
-  canvasInit: {fileID: 2114814984}
-  canvasTestMode: {fileID: 421042387}
-  teamOneCount: {fileID: 450679077}
-  teamTwoCount: {fileID: 954642202}
-  startButtonStatus: {fileID: 0}
-  resetCountersButton: {fileID: 1061420883}
-  linac_a: {fileID: 0}
-  linac_b: {fileID: 0}
-  openAllLinacButton: {fileID: 0}
-  closeAllLinacButton: {fileID: 0}
-  blower_0: {fileID: 0}
-  blower_1: {fileID: 0}
-  openAllBlowerButton: {fileID: 0}
-  closeAllBlowerButton: {fileID: 0}
-  startLed: {fileID: 0}
 --- !u!4 &1458709080
 Transform:
   m_ObjectHideFlags: 0
@@ -1660,6 +1631,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1211f22696f73f4f9c756bafc46f14f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arenaBallsController: {fileID: 375149854}
+  canvasInit: {fileID: 2114814984}
+  canvasGame: {fileID: 421042387}
+  startButton: {fileID: 1061420883}
+  mainText: {fileID: 781633841}
+  timerText: {fileID: 1961110767}
+  counters: {fileID: 1996998847}
+  teamOneCount: {fileID: 450679077}
+  teamTwoCount: {fileID: 954642202}
+  gameDuration: 30
 --- !u!1 &1589303997
 GameObject:
   m_ObjectHideFlags: 0
@@ -2183,7 +2164,7 @@ GameObject:
   - component: {fileID: 1996998848}
   - component: {fileID: 1996998849}
   m_Layer: 5
-  m_Name: Count
+  m_Name: Counter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2524,7 +2505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2114814981
 RectTransform:
   m_ObjectHideFlags: 0
