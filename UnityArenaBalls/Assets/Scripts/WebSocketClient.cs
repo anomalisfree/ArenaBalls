@@ -9,6 +9,7 @@ public class WebSocketClient : MonoBehaviour
     [SerializeField] private string ip = "192.168.1.32";
     [SerializeField] private int port = 8765;
     [SerializeField] private float sentDataInterval = 0.1f;
+    [SerializeField] private float linacDelayTime = 4f;
 
     public UnityAction<ReceiveData> OnReceiveData;
 
@@ -131,6 +132,8 @@ public class WebSocketClient : MonoBehaviour
 
     private void SendData()
     {
+        _broadcastData.linacDelayTime = linacDelayTime;
+
         if (ws != null && ws.IsAlive)
         {
             string jsonData = JsonUtility.ToJson(_broadcastData);
