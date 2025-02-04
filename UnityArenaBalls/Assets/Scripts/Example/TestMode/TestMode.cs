@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class TestMode : MonoBehaviour
 {
-    [SerializeField] private ArenaBallsController arenaBallsController;
+    [SerializeField] private WebSocketClient webSocketClient;
+
     [SerializeField] private Canvas canvasInit;
     [SerializeField] private Canvas canvasTestMode;
 
@@ -27,57 +28,56 @@ public class TestMode : MonoBehaviour
     {
         canvasTestMode.enabled = false;
         canvasInit.enabled = true;
-        arenaBallsController.Mode = 1;
-        arenaBallsController.OnReceiveData += OnReceiveData;
-        resetCountersButton.onClick.AddListener(() => { arenaBallsController.ResetCounters = true; });
-        linac_a.onValueChanged.AddListener((isOn) => { arenaBallsController.IsLinacAOn = isOn; });
-        linac_b.onValueChanged.AddListener((isOn) => { arenaBallsController.IsLinacBOn = isOn; });
-        openAllLinacButton.onClick.AddListener(() => { 
+        webSocketClient.Mode = Mode.TEST;
+
+        webSocketClient.OnReceiveData += OnReceiveData;
+        resetCountersButton.onClick.AddListener(() => { webSocketClient.ResetCounters = true; });
+        linac_a.onValueChanged.AddListener((isOn) => { webSocketClient.IsLinacAOn = isOn; });
+        linac_b.onValueChanged.AddListener((isOn) => { webSocketClient.IsLinacBOn = isOn; });
+        openAllLinacButton.onClick.AddListener(() =>
+        {
             linac_a.isOn = true;
             linac_b.isOn = true;
         });
-        closeAllLinacButton.onClick.AddListener(() => { 
+        closeAllLinacButton.onClick.AddListener(() =>
+        {
             linac_a.isOn = false;
             linac_b.isOn = false;
         });
-        blower_0.onValueChanged.AddListener((isOn) => { arenaBallsController.IsBlower0On = isOn; });
-        blower_1.onValueChanged.AddListener((isOn) => { arenaBallsController.IsBlower1On = isOn; });
-        openAllBlowerButton.onClick.AddListener(() => { 
+        blower_0.onValueChanged.AddListener((isOn) => { webSocketClient.IsBlower0On = isOn; });
+        blower_1.onValueChanged.AddListener((isOn) => { webSocketClient.IsBlower1On = isOn; });
+        openAllBlowerButton.onClick.AddListener(() =>
+        {
             blower_0.isOn = true;
             blower_1.isOn = true;
         });
-        closeAllBlowerButton.onClick.AddListener(() => {
+        closeAllBlowerButton.onClick.AddListener(() =>
+        {
             blower_0.isOn = false;
             blower_1.isOn = false;
         });
-        startLed.onValueChanged.AddListener((isOn) => { arenaBallsController.IsStartLedOn = isOn; });
+        startLed.onValueChanged.AddListener((isOn) => { webSocketClient.IsStartLedOn = isOn; });
+
     }
 
     private void OnReceiveData(ReceiveData data)
     {
-        if (!data.initialized)
+        if (data.mode != ((int)Mode.TEST))
         {
-            canvasInit.enabled = true;
             canvasTestMode.enabled = false;
+            canvasInit.enabled = true;
+            webSocketClient.Mode = Mode.TEST;
             return;
-        }
-
-        if (data.currentMode == 1)
-        {
-            canvasInit.enabled = false;
-            canvasTestMode.enabled = true;
         }
         else
         {
-            canvasInit.enabled = true;
-            canvasTestMode.enabled = false;
-            arenaBallsController.Mode = 1;
-            return;
+            canvasInit.enabled = false;
+            canvasTestMode.enabled = true;
+
+            teamOneCount.text = data.counter_0.ToString();
+            teamTwoCount.text = data.counter_1.ToString();
+
+            startButtonStatus.color = data.start_btn ? Color.yellow : Color.white;
         }
-
-        teamOneCount.text = data.counter_0.ToString();
-        teamTwoCount.text = data.counter_1.ToString();
-
-        startButtonStatus.color = data.startButton ? Color.yellow : Color.white;
     }
 }
