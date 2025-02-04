@@ -54,8 +54,8 @@ def sensor_1_callback(channel):
     if counting:
         counter_1 += 1
 
-GPIO.add_event_detect(SENSOR_0, GPIO.RISING, callback=sensor_0_callback, bouncetime=5)
-GPIO.add_event_detect(SENSOR_1, GPIO.RISING, callback=sensor_1_callback, bouncetime=5)
+GPIO.add_event_detect(SENSOR_0, GPIO.RISING, callback=sensor_0_callback, bouncetime=10)
+GPIO.add_event_detect(SENSOR_1, GPIO.RISING, callback=sensor_1_callback, bouncetime=10)
 
 def reset_counters():
     global counter_0, counter_1
